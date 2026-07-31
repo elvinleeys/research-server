@@ -12,7 +12,7 @@ router = APIRouter(
 @router.post("/")
 async def chat(
     message: str = Form(...),
-    files: list[UploadFile] | None = File(default=None),
+    files: list[UploadFile] = File(default=[]),
 ):
     answer = await generate_response(
         message=message,
