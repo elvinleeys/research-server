@@ -1,9 +1,11 @@
 from fastapi import UploadFile
 from app.llm.openai_provider import MockProvider
+from app.agents.planner import Planner
 
 class ResearchAgent:
     def __init__(self):
         self.provider = MockProvider()
+        self.planner = Planner()
 
     async def run(
         self,
@@ -11,7 +13,16 @@ class ResearchAgent:
         files: list[UploadFile] = [],
     ) -> str:
 
-        context = await self._build_context(message, files)
+        plan = await self.planner.create_plan(
+            message=message,
+            has_files=len(files) > 0
+        )
+
+        context = await self._build_context(
+            message, 
+            files, 
+            plan
+        )
 
         print(context)
 
@@ -25,11 +36,13 @@ class ResearchAgent:
         self,
         message: str,
         files: list[UploadFile],
+        plan
     ) -> dict:
 
         return {
             "message": message,
             "files": files,
+            "plan": plan,
         }
 
     async def _generate_answer(
