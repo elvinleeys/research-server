@@ -3,6 +3,17 @@ from app.agents.planner import Planner
 
 @pytest.mark.unit
 @pytest.mark.anyio
+async def test_general_plan():
+    planner = Planner()
+
+    plan = await planner.create_plan(
+        message="AI Agent란?"
+    )
+
+    assert plan.task_type == "general"
+
+@pytest.mark.unit
+@pytest.mark.anyio
 async def test_document_plan():
     planner = Planner()
 
@@ -14,15 +25,3 @@ async def test_document_plan():
     assert plan.task_type == "analyze_document"
 
     assert "파일 내용 추출" in plan.steps
-
-
-@pytest.mark.unit
-@pytest.mark.anyio
-async def test_general_plan():
-    planner = Planner()
-
-    plan = await planner.create_plan(
-        message="AI Agent란?"
-    )
-
-    assert plan.task_type == "general"

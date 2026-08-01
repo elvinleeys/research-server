@@ -1,8 +1,5 @@
 import pytest
-from tests.conftest import client
-from pathlib import Path
-
-BASE_DIR = Path(__file__).parent
+from tests.conftest import client, test_files_dir
 
 # 메시지만 전송했을 경우
 @pytest.mark.integration
@@ -18,8 +15,8 @@ def test_chat_message_only(client):
 
 # 파일 하나만 전송했을 경우
 @pytest.mark.integration
-def test_chat_pdf():
-    file_path = BASE_DIR / "files" / "sample.pdf"
+def test_chat_pdf(client, test_files_dir):
+    file_path = test_files_dir / "sample.pdf"
 
     with open(file_path, "rb") as f:
         response = client.post(
@@ -45,9 +42,9 @@ def test_chat_pdf():
 
 # 여러 파일을 전송했을 경우
 @pytest.mark.integration
-def test_chat_multiple_files():
-    pdf_path = BASE_DIR / "files" / "sample.pdf"
-    image_path = BASE_DIR / "files" / "sample.png"
+def test_chat_multiple_files(client, test_files_dir):
+    pdf_path = test_files_dir / "sample.pdf"
+    image_path = test_files_dir / "sample.png"
 
     with open(pdf_path, "rb") as pdf, open(image_path, "rb") as image:
 
